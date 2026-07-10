@@ -720,22 +720,51 @@
     }
     function closeProductForm() { document.getElementById('pmodalOverlay').classList.remove('open'); }
 
-    async function saveProduct() {
-      const name=document.getElementById('pName').value.trim();
-      const emoji=document.getElementById('pEmoji').value.trim()||'🧶';
-      const price=parseFloat(document.getElementById('pPrice').value);
-      const desccription=document.getElementById('pDescription').value.trim();
-      const bg=document.getElementById('pBg').value.trim()||selectedBg||'#FFE4E8';
-      const image=document.getElementById('pImgData').value||'';
-      const editId=document.getElementById('pEditId').value;
-      if (!name||!price||!description) { showToast('Please fill in all required fields.'); return; }
-      try {
-        if (editId) { await dbUpdateProduct(editId,{name,emoji,price,description:desc,bg,image}); showToast('✅ Product updated!'); }
-        else { await dbSaveProduct({name,emoji,price,description:desc,bg,image}); showToast('✅ New product added to your shop!'); }
+   async function saveProduct() {
+    const name = document.getElementById('pName').value.trim();
+    const emoji = document.getElementById('pEmoji').value.trim() || '🧶';
+    const price = parseFloat(document.getElementById('pPrice').value);
+    const description = document.getElementById('pDescription').value.trim();
+    const bg = document.getElementById('pBg').value.trim() || selectedBg || '#FFE4E8';
+    const image = document.getElementById('pImgData').value || '';
+    const editId = document.getElementById('pEditId').value;
+
+    if (!name || isNaN(price) || !description) {
+        showToast('Please fill in all required fields.');
+        return;
+    }
+
+    try {
+        if (editId) {
+            await dbUpdateProduct(editId, {
+                name,
+                emoji,
+                price,
+                description,
+                bg,
+                image
+            });
+            showToast('✅ Product updated!');
+        } else {
+            await dbSaveProduct({
+                name,
+                emoji,
+                price,
+                description,
+                bg,
+                image
+            });
+            showToast('✅ New product added to your shop!');
+        }
+
         closeProductForm();
         await loadProducts();
-      } catch(e) { showToast('⚠️ Could not save product.'); }
+
+    } catch (e) {
+        console.error(e);
+        showToast('⚠️ Could not save product.');
     }
+}
 
     async function removeProduct(id) {
       if (!confirm('Remove this product from the shop?')) return;
