@@ -307,7 +307,7 @@
         <div class="pfg"><label>Price (₱) *</label><input type="number" id="pPrice" placeholder="e.g. 250" min="1" required /></div>
       </div>
       <div class="pfg"><label>Product Name *</label><input type="text" id="pName" placeholder="e.g. Amigurumi Bear" required /></div>
-      <div class="pfg"><label>Description *</label><textarea id="pDesc" rows="3" placeholder="Short description customers will see…" required></textarea></div>
+      <div class="pfg"><label>Description *</label><textarea id="pDescription" rows="3" placeholder="Short description customers will see…" required></textarea></div>
       <div class="pfg">
         <label>Card Background Color <span style="font-weight:400;color:var(--muted)">(shown when no photo)</span></label>
         <div class="bg-swatches" id="bgSwatches"></div>
@@ -707,12 +707,12 @@
         const p = products.find(p=>p.id==id);
         if (!p) return;
         document.getElementById('pName').value=p.name; document.getElementById('pEmoji').value=p.emoji||'';
-        document.getElementById('pPrice').value=p.price; document.getElementById('pDesc').value=p.description||p.desc||'';
+        document.getElementById('pPrice').value=p.price; document.getElementById('pDescription ').value=p.description||p.desc||'';
         document.getElementById('pBg').value=p.bg||'#FFE4E8'; selectedBg=p.bg||'#FFE4E8';
         if (p.image) setImagePreview(p.image);
       } else {
         document.getElementById('pName').value=''; document.getElementById('pEmoji').value='';
-        document.getElementById('pPrice').value=''; document.getElementById('pDesc').value='';
+        document.getElementById('pPrice').value=''; document.getElementById('pDescription').value='';
         document.getElementById('pBg').value='#FFE4E8'; selectedBg='#FFE4E8';
       }
       buildSwatches();
@@ -724,14 +724,14 @@
       const name=document.getElementById('pName').value.trim();
       const emoji=document.getElementById('pEmoji').value.trim()||'🧶';
       const price=parseFloat(document.getElementById('pPrice').value);
-      const desc=document.getElementById('pDesc').value.trim();
+      const desccription=document.getElementById('pDesc').value.trim();
       const bg=document.getElementById('pBg').value.trim()||selectedBg||'#FFE4E8';
       const image=document.getElementById('pImgData').value||'';
       const editId=document.getElementById('pEditId').value;
-      if (!name||!price||!desc) { showToast('Please fill in all required fields.'); return; }
+      if (!name||!price||!description) { showToast('Please fill in all required fields.'); return; }
       try {
         if (editId) { await dbUpdateProduct(editId,{name,emoji,price,description:desc,bg,image}); showToast('✅ Product updated!'); }
-        else { await dbSaveProduct({name,emoji,price,desc,bg,image}); showToast('✅ New product added to your shop!'); }
+        else { await dbSaveProduct({name,emoji,price,description:desc,bg,image}); showToast('✅ New product added to your shop!'); }
         closeProductForm();
         await loadProducts();
       } catch(e) { showToast('⚠️ Could not save product.'); }
