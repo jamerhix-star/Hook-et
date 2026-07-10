@@ -707,7 +707,7 @@
         const p = products.find(p=>p.id==id);
         if (!p) return;
         document.getElementById('pName').value=p.name; document.getElementById('pEmoji').value=p.emoji||'';
-        document.getElementById('pPrice').value=p.price; document.getElementById('pDescription ').value=p.description||p.desc||'';
+        document.getElementById('pPrice').value=p.price; document.getElementById('pDescription').value=p.description||p.desc||'';
         document.getElementById('pBg').value=p.bg||'#FFE4E8'; selectedBg=p.bg||'#FFE4E8';
         if (p.image) setImagePreview(p.image);
       } else {
