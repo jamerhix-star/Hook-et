@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="Supabase.js"></script>
+  <script src="supabase.js"></script>
   <style>
     .custom-main{max-width:700px;margin:0 auto;padding:3rem 1.5rem 5rem}
     .custom-hero{text-align:center;margin-bottom:2.5rem}
@@ -58,12 +58,12 @@
 <body>
   <header class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
+      <a href="Index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
       <nav class="nav-links">
         <a href="Shop.html">Shop</a>
         <a href="Custom.html" style="color:var(--amber)">Custom Order</a>
         <a href="Gallery.html">Gallery</a>
-        <a href="index.html#about">About</a>
+        <a href="Index.html#about">About</a>
       </nav>
       <button class="hamburger" id="hamburger">☰</button>
     </div>
@@ -71,7 +71,7 @@
       <a href="Shop.html">Shop</a>
       <a href="Custom.html">Custom Order</a>
       <a href="Gallery.html">Gallery</a>
-      <a href="index.html#about">About</a>
+      <a href="Index.html#about">About</a>
     </div>
   </header>
 
@@ -81,7 +81,6 @@
       <h1>Let's Make Something Special 🎨</h1>
       <p>Tell me what you have in mind and I'll bring it to life with yarn! Orders take 4–7 days depending on size.</p>
     </div>
-
     <div class="custom-form">
       <form id="customForm">
         <div style="margin-bottom:1.2rem">
@@ -114,7 +113,7 @@
             <div class="fg"><label>Color(s)</label><input type="text" id="cColor" placeholder="e.g. Pastel pink, sage, cream" /></div>
             <div class="fg"><label>Size</label><input type="text" id="cSize" placeholder="e.g. Small, palm-sized" /></div>
           </div>
-          <div class="fg"><label>Describe your request *</label><textarea id="cDesc" rows="4" placeholder="The more detail the better!" required></textarea></div>
+          <div class="fg"><label>Describe your request *</label><textarea id="cDesc" rows="4" placeholder="The more detail the better! 🌸" required></textarea></div>
           <div class="fg ref-section">
             <label class="ref-upload-label">📷 Reference Photos <span style="font-weight:400;color:var(--muted)">(optional, up to 3)</span></label>
             <span class="ref-upload-hint">Upload photos that show what you'd like. The owner will see these when reviewing your request.</span>
@@ -146,17 +145,15 @@
           <button type="submit" class="btn btn-primary">Send Request 💛</button>
         </div>
       </form>
-
       <div class="success-msg" id="successMsg">
         <div style="font-size:3rem">🧡</div>
         <h2>Request sent!</h2>
         <p style="color:var(--muted)">Thank you! I'll reach out to you via Facebook within 24 hours to discuss details, timeline, and pricing.</p>
-        <a href="index.html" class="btn btn-outline" style="margin-top:1.5rem">Back to Home</a>
+        <a href="Index.html" class="btn btn-outline" style="margin-top:1.5rem">Back to Home</a>
       </div>
     </div>
   </main>
 
-  <!-- CELEBRATION -->
   <div class="celebrate-overlay" id="celebrateOverlay">
     <div class="celebrate-backdrop" onclick="closeCelebration()"></div>
     <div class="celebrate-card">
@@ -171,7 +168,11 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand"><span class="yarn-icon">🧶</span><span class="footer-name">Hook Et</span><p>Handmade crochet from Cebu 🇵🇭</p></div>
-      <div class="footer-links"><a href="index.html">Home</a><a href="Shop.html">Shop</a><a href="Gallery.html">Gallery</a></div>
+      <div class="footer-links">
+        <a href="Index.html">Home</a>
+        <a href="Shop.html">Shop</a>
+        <a href="Gallery.html">Gallery</a>
+      </div>
     </div>
     <div class="footer-bottom"><p>© 2024 Hook Et. Made with 🧡 and lots of yarn.</p></div>
   </footer>
@@ -180,8 +181,8 @@
      style="position:fixed;bottom:6px;left:6px;width:8px;height:8px;border-radius:50%;background:rgba(200,200,200,0.18);display:block;z-index:9999;cursor:default;"></a>
 
   <script>
-    /* ── REFERENCE PHOTOS ── */
     let refImages = [];
+
     function handleRefFiles(e) { loadRefFiles(Array.from(e.target.files)); e.target.value=''; }
     function handleDragOver(e) { e.preventDefault(); document.getElementById('refDropZone').classList.add('drag-over'); }
     function handleDragLeave(e) { document.getElementById('refDropZone').classList.remove('drag-over'); }
@@ -192,7 +193,7 @@
     function loadRefFiles(files) {
       const remaining = 3 - refImages.length;
       if (remaining <= 0) { showRefToast('Maximum 3 photos reached.'); return; }
-      files.slice(0,remaining).forEach(file => {
+      files.slice(0, remaining).forEach(file => {
         const reader = new FileReader();
         reader.onload = ev => { refImages.push(ev.target.result); renderRefPreviews(); };
         reader.readAsDataURL(file);
@@ -208,7 +209,8 @@
         refImages.forEach((src, idx) => {
           const thumb = document.createElement('div');
           thumb.className = 'ref-thumb';
-          thumb.innerHTML = '<img src="' + src + '" alt="Ref ' + (idx+1) + '" />' +
+          thumb.innerHTML =
+            '<img src="' + src + '" alt="Ref ' + (idx+1) + '" />' +
             '<button class="thumb-del" type="button" onclick="removeRefImage(' + idx + ')">✕</button>';
           grid.appendChild(thumb);
         });
@@ -225,31 +227,30 @@
       setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},3000);
     }
 
-    /* ── SUBMIT TO SUPABASE ── */
     document.getElementById('customForm').onsubmit = async function(e) {
       e.preventDefault();
       const submitBtn = this.querySelector('button[type=submit]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending... ⏳';
+      submitBtn.disabled = true; submitBtn.textContent = 'Sending... ⏳';
 
+      /* ── description column name matches Supabase exactly ── */
       const order = {
-        type:      'custom',
-        emoji:     '🎨',
-        category:  document.getElementById('cType').value,
+        type:        'custom',
+        emoji:       '🎨',
+        category:    document.getElementById('cType').value,
         description: document.getElementById('cDesc').value.trim(),
-        color:     document.getElementById('cColor').value.trim(),
-        size:      document.getElementById('cSize').value.trim(),
-        budget:    document.getElementById('cBudget').value.trim(),
-        qty:       parseInt(document.getElementById('cQty').value) || 1,
-        total:     null,
-        name:      document.getElementById('cName').value.trim(),
-        fb:        document.getElementById('cFB').value.trim(),
-        ig:        document.getElementById('cIG').value.trim(),
-        phone:     document.getElementById('cPhone').value.trim(),
-        deadline:  document.getElementById('cDate').value,
-        notes:     document.getElementById('cNotes').value.trim(),
-        ref_images: refImages.slice(),
-        status:    'Pending'
+        color:       document.getElementById('cColor').value.trim(),
+        size:        document.getElementById('cSize').value.trim(),
+        budget:      document.getElementById('cBudget').value.trim(),
+        qty:         parseInt(document.getElementById('cQty').value) || 1,
+        total:       null,
+        name:        document.getElementById('cName').value.trim(),
+        fb:          document.getElementById('cFB').value.trim(),
+        ig:          document.getElementById('cIG').value.trim(),
+        phone:       document.getElementById('cPhone').value.trim(),
+        deadline:    document.getElementById('cDate').value,
+        notes:       document.getElementById('cNotes').value.trim(),
+        ref_images:  refImages.slice(),
+        status:      'Pending'
       };
 
       try {
@@ -261,31 +262,25 @@
       } catch(err) {
         console.error(err);
         showRefToast('⚠️ Could not send request. Please try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Request 💛';
+        submitBtn.disabled = false; submitBtn.textContent = 'Send Request 💛';
       }
     };
 
-    /* ── CELEBRATION ── */
-    const FLOWERS = ['🌸','🌷','🌺','🌻','💐','🌹','🌼','✨','🪷','💮'];
-    let flowerInterval = null;
+    const FLOWERS=['🌸','🌷','🌺','🌻','💐','🌹','🌼','✨','🪷','💮'];
+    let flowerInterval=null;
     function showCelebration(name) {
-      document.getElementById('thankName').textContent = name || 'friend';
+      document.getElementById('thankName').textContent=name||'friend';
       document.getElementById('celebrateOverlay').classList.add('show');
-      let count = 0;
-      flowerInterval = setInterval(() => { spawnFlower(); count++; if(count>60){clearInterval(flowerInterval);flowerInterval=null;} }, 120);
-      for(let i=0;i<12;i++) setTimeout(spawnFlower, i*60);
+      let count=0;
+      flowerInterval=setInterval(()=>{spawnFlower();count++;if(count>60){clearInterval(flowerInterval);flowerInterval=null;}},120);
+      for(let i=0;i<12;i++) setTimeout(spawnFlower,i*60);
     }
     function spawnFlower() {
-      const el = document.createElement('div');
-      el.className = 'flower-piece';
-      el.textContent = FLOWERS[Math.floor(Math.random()*FLOWERS.length)];
-      el.style.left = (Math.random()*100)+'vw';
-      el.style.fontSize = (1.2+Math.random()*1.6)+'rem';
-      const dur = 2.5+Math.random()*2.5;
-      el.style.animationDuration = dur+'s';
-      el.style.animationDelay = (Math.random()*.8)+'s';
-      document.body.appendChild(el);
+      const el=document.createElement('div'); el.className='flower-piece';
+      el.textContent=FLOWERS[Math.floor(Math.random()*FLOWERS.length)];
+      el.style.left=(Math.random()*100)+'vw'; el.style.fontSize=(1.2+Math.random()*1.6)+'rem';
+      const dur=2.5+Math.random()*2.5; el.style.animationDuration=dur+'s';
+      el.style.animationDelay=(Math.random()*.8)+'s'; document.body.appendChild(el);
       setTimeout(()=>el.remove(),(dur+1)*1000);
     }
     function closeCelebration() {
@@ -293,9 +288,7 @@
       if(flowerInterval){clearInterval(flowerInterval);flowerInterval=null;}
       document.querySelectorAll('.flower-piece').forEach(f=>f.remove());
     }
-
-    document.getElementById('hamburger').addEventListener('click', () =>
-      document.getElementById('mobileMenu').classList.toggle('open'));
+    document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
   </script>
 </body>
 </html>
