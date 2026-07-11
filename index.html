@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="Supabase.js"></script>
+  <script src="supabase.js"></script>
   <style>
     .feat-img{width:100%;height:180px;object-fit:cover;display:block}
     .feat-fallback{width:100%;height:180px}
@@ -47,9 +47,10 @@
   </style>
 </head>
 <body>
+
   <header class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
+      <a href="Index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
       <nav class="nav-links">
         <a href="Shop.html">Shop</a>
         <a href="Custom.html">Custom Order</a>
@@ -115,7 +116,8 @@
     <div class="items-grid">
       <div class="item-card">
         <div class="item-img-wrap">
-          <img class="feat-img" src="Images/keychain.png" alt="Keychains" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <img class="feat-img" src="Images/keychain.png" alt="Keychains"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
           <div class="item-placeholder feat-fallback" style="background:#FFE4E8;display:none;">🧸</div>
           <span class="item-badge">Available</span>
         </div>
@@ -127,7 +129,8 @@
       </div>
       <div class="item-card">
         <div class="item-img-wrap">
-          <img class="feat-img" src="Images/hat.png" alt="Hats" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <img class="feat-img" src="Images/hat.png" alt="Hats"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
           <div class="item-placeholder feat-fallback" style="background:#E8F4E8;display:none;">👜</div>
           <span class="item-badge">Available</span>
         </div>
@@ -139,7 +142,8 @@
       </div>
       <div class="item-card">
         <div class="item-img-wrap">
-          <img class="feat-img" src="Images/bouquet.png" alt="Flower Bouquet" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+          <img class="feat-img" src="Images/bouquet.png" alt="Flower Bouquet"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
           <div class="item-placeholder feat-fallback" style="background:#FFF3E0;display:none;">🌸</div>
           <span class="item-badge">Available</span>
         </div>
@@ -150,7 +154,7 @@
         </div>
       </div>
     </div>
-    <div class="see-all-wrap"><a href="shop.html" class="btn btn-outline">See all items</a></div>
+    <div class="see-all-wrap"><a href="Shop.html" class="btn btn-outline">See all items</a></div>
   </section>
 
   <section class="custom-cta">
@@ -166,7 +170,8 @@
 
   <section class="gallery-showcase">
     <div class="gs-banner-wrap">
-      <img src="Images/gallery.png" alt="Hook Et crochet gallery" class="gs-banner-img" onerror="this.parentElement.style.display='none'" />
+      <img src="Images/gallery.png" alt="Hook Et crochet gallery" class="gs-banner-img"
+           onerror="this.parentElement.style.display='none'" />
       <div class="gs-banner-overlay">
         <div class="gs-banner-tag">Our Work ✨</div>
         <h2 class="gs-banner-title">See What We've Made 📸</h2>
@@ -212,13 +217,18 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand"><span class="yarn-icon">🧶</span><span class="footer-name">Hook Et</span><p>Handmade crochet from Cebu, Philippines 🇵🇭</p></div>
-      <div class="footer-links"><a href="Shop.html">Shop</a><a href="Custom.html">Custom Order</a><a href="Gallery.html">Gallery</a></div>
+      <div class="footer-links">
+        <a href="Shop.html">Shop</a>
+        <a href="Custom.html">Custom Order</a>
+        <a href="Gallery.html">Gallery</a>
+      </div>
     </div>
     <div class="footer-bottom"><p>© 2024 Hook Et. Made with 🧡 and lots of yarn.</p></div>
   </footer>
 
   <a href="Admin.html" aria-hidden="true" tabindex="-1"
-     style="position:fixed;bottom:6px;left:6px;width:8px;height:8px;border-radius:50%;background:rgba(200,200,200,0.18);display:block;z-index:9999;cursor:default;"></a>
+     style="position:fixed;bottom:6px;left:6px;width:8px;height:8px;border-radius:50%;
+            background:rgba(200,200,200,0.18);display:block;z-index:9999;cursor:default;"></a>
 
   <script>
     document.getElementById('hamburger').addEventListener('click', () =>
@@ -230,12 +240,18 @@
         const teaser  = document.getElementById('galleryTeaser');
         const counter = document.getElementById('gsPhotoCount');
         if (counter) counter.textContent = photos.length;
-        if (!photos.length) { teaser.innerHTML='<div class="gs-thumbs-empty">📸 Gallery coming soon!</div>'; return; }
-        teaser.innerHTML = photos.slice(0,5).map(p =>
-          `<a href="gallery.html" class="gs-thumb-item"><img src="${p.image}" alt="${p.label||'Crochet work'}" loading="lazy" /></a>`
+        if (!photos.length) {
+          teaser.innerHTML = '<div class="gs-thumbs-empty">📸 Gallery coming soon!</div>';
+          return;
+        }
+        teaser.innerHTML = photos.slice(0, 5).map(p =>
+          `<a href="Gallery.html" class="gs-thumb-item">
+             <img src="${p.image}" alt="${p.label || 'Crochet work'}" loading="lazy" />
+           </a>`
         ).join('');
       } catch(e) {
-        document.getElementById('galleryTeaser').innerHTML='<div class="gs-thumbs-empty">📸 Gallery coming soon!</div>';
+        document.getElementById('galleryTeaser').innerHTML =
+          '<div class="gs-thumbs-empty">📸 Gallery coming soon!</div>';
       }
     }
     loadGalleryTeaser();
