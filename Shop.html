@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="Supabase.js"></script>
+  <script src="supabase.js"></script>
   <style>
     .shop-main{max-width:1100px;margin:0 auto;padding:3rem 1.5rem 6rem}
     .shop-hero{text-align:center;margin-bottom:2.5rem}
@@ -85,15 +85,14 @@
   </style>
 </head>
 <body>
-
   <header class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
+      <a href="Index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
       <nav class="nav-links">
         <a href="Shop.html" style="color:var(--amber)">Browse</a>
         <a href="Custom.html">Custom Order</a>
         <a href="Gallery.html">Gallery</a>
-        <a href="index.html#about">About</a>
+        <a href="Index.html#about">About</a>
       </nav>
       <button class="hamburger" id="hamburger">☰</button>
     </div>
@@ -101,7 +100,7 @@
       <a href="Shop.html">Browse</a>
       <a href="Custom.html">Custom Order</a>
       <a href="Gallery.html">Gallery</a>
-      <a href="index.html#about">About</a>
+      <a href="Index.html#about">About</a>
     </div>
   </header>
 
@@ -125,7 +124,6 @@
     <button class="cb-clear" onclick="clearCart()">Clear</button>
   </div>
 
-  <!-- ORDER MODAL -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <button class="modal-close" id="modalClose">✕</button>
@@ -151,7 +149,6 @@
     </div>
   </div>
 
-  <!-- CELEBRATION -->
   <div class="celebrate-overlay" id="celebrateOverlay">
     <div class="celebrate-backdrop" onclick="closeCelebration()"></div>
     <div class="celebrate-card">
@@ -163,14 +160,17 @@
     </div>
   </div>
 
-  <!-- Secret admin dot -->
   <a href="Admin.html" aria-hidden="true" tabindex="-1"
      style="position:fixed;bottom:6px;left:6px;width:8px;height:8px;border-radius:50%;background:rgba(200,200,200,0.18);display:block;z-index:9999;cursor:default;"></a>
 
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand"><span class="yarn-icon">🧶</span><span class="footer-name">Hook Et</span><p>Handmade crochet from Cebu 🇵🇭</p></div>
-      <div class="footer-links"><a href="index.html">Home</a><a href="Custom.html">Custom Order</a><a href="Gallery.html">Gallery</a></div>
+      <div class="footer-links">
+        <a href="Index.html">Home</a>
+        <a href="Custom.html">Custom Order</a>
+        <a href="Gallery.html">Gallery</a>
+      </div>
     </div>
     <div class="footer-bottom"><p>© 2024 Hook Et. Made with 🧡 and lots of yarn.</p></div>
   </footer>
@@ -178,12 +178,10 @@
   <script>
     let ITEMS = [];
     let cart  = [];
+    function cartTotal()       { return cart.reduce((s,c) => s + c.item.price * c.qty, 0); }
+    function cartCount()       { return cart.reduce((s,c) => s + c.qty, 0); }
+    function findCartEntry(id) { return cart.find(c => c.item.id === id); }
 
-    function cartTotal()      { return cart.reduce((s,c) => s + c.item.price * c.qty, 0); }
-    function cartCount()      { return cart.reduce((s,c) => s + c.qty, 0); }
-    function findCartEntry(id){ return cart.find(c => c.item.id === id); }
-
-    /* ── LOAD PRODUCTS FROM SUPABASE ── */
     async function loadProducts() {
       const grid = document.getElementById('shopGrid');
       try {
@@ -216,7 +214,7 @@
           </div>
           <div class="item-info">
             <h3>${item.name}</h3>
-            <p>${item.desc}</p>
+            <p>${item.description || ''}</p>
             <div class="item-footer">
               <span class="item-price">₱${Number(item.price).toLocaleString()}</span>
               <button class="btn-add" id="btn_${item.id}" onclick="addToCart(${item.id})">
@@ -232,7 +230,7 @@
       const item  = ITEMS.find(i => i.id === id);
       const entry = findCartEntry(id);
       if (entry) entry.qty++;
-      else cart.push({ item, qty:1 });
+      else cart.push({ item, qty: 1 });
       updateCartUI();
       const btn = document.getElementById('btn_' + id);
       btn.classList.add('added');
@@ -242,23 +240,18 @@
         btn.innerHTML = findCartEntry(id) ? '<span>＋</span> Add More' : '<span>＋</span> Add to List';
       }, 1000);
     }
-
     function removeFromCart(id) {
       cart = cart.filter(c => c.item.id !== id);
       const btn = document.getElementById('btn_' + id);
       if (btn) { btn.classList.remove('added'); btn.innerHTML = '<span>＋</span> Add to List'; }
-      updateCartUI();
-      refreshCartSummary();
+      updateCartUI(); refreshCartSummary();
     }
-
     function changeQty(id, delta) {
       const entry = findCartEntry(id);
       if (!entry) return;
       entry.qty = Math.max(1, entry.qty + delta);
-      updateCartUI();
-      refreshCartSummary();
+      updateCartUI(); refreshCartSummary();
     }
-
     function clearCart() {
       cart = [];
       ITEMS.forEach(i => {
@@ -267,7 +260,6 @@
       });
       updateCartUI();
     }
-
     function updateCartUI() {
       const count = cartCount();
       document.getElementById('cbCount').textContent = count;
@@ -279,13 +271,9 @@
           btn.innerHTML = findCartEntry(item.id) ? '<span>＋</span> Add More' : '<span>＋</span> Add to List';
       });
     }
-
     function refreshCartSummary() {
       const el = document.getElementById('cartSummary');
-      if (!cart.length) {
-        el.innerHTML = '<p style="color:var(--muted);font-size:.88rem;text-align:center">Your list is empty. Close and add some items!</p>';
-        return;
-      }
+      if (!cart.length) { el.innerHTML = '<p style="color:var(--muted);font-size:.88rem;text-align:center">Your list is empty. Close and add some items!</p>'; return; }
       el.innerHTML = `
         <div class="cart-summary-title">🛒 Your Order List</div>
         ${cart.map(c => `
@@ -306,27 +294,19 @@
           <span class="ct-num">₱${cartTotal().toLocaleString()}</span>
         </div>`;
     }
-
     function openModal() {
       if (!cart.length) { showToast('Add at least one item first! 🧸'); return; }
       refreshCartSummary();
       document.getElementById('modalOverlay').classList.add('open');
     }
-    document.getElementById('modalClose').onclick = () =>
-      document.getElementById('modalOverlay').classList.remove('open');
-    document.getElementById('modalOverlay').onclick = e => {
-      if (e.target === document.getElementById('modalOverlay'))
-        document.getElementById('modalOverlay').classList.remove('open');
-    };
+    document.getElementById('modalClose').onclick = () => document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('modalOverlay').onclick = e => { if (e.target === document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open'); };
 
-    /* ── SUBMIT ORDER TO SUPABASE ── */
     document.getElementById('orderForm').onsubmit = async function(e) {
       e.preventDefault();
       if (!cart.length) { showToast('Your list is empty!'); return; }
       const submitBtn = this.querySelector('button[type=submit]');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending... ⏳';
-
+      submitBtn.disabled = true; submitBtn.textContent = 'Sending... ⏳';
       const order = {
         type:     'browse',
         emoji:    '🛒',
@@ -342,61 +322,45 @@
         notes:    document.getElementById('orderNotes').value.trim(),
         status:   'Pending'
       };
-
       try {
         await dbSaveOrder(order);
         const buyerName = document.getElementById('buyerName').value.trim();
         document.getElementById('modalOverlay').classList.remove('open');
-        this.reset();
-        clearCart();
-        showCelebration(buyerName);
+        this.reset(); clearCart(); showCelebration(buyerName);
       } catch(err) {
-        console.error(err);
-        showToast('⚠️ Could not place order. Please try again.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Place Order 💛';
+        console.error(err); showToast('⚠️ Could not place order. Please try again.');
+        submitBtn.disabled = false; submitBtn.textContent = 'Place Order 💛';
       }
     };
 
     function showToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'toast'; t.textContent = msg;
-      document.body.appendChild(t);
-      setTimeout(() => t.classList.add('show'), 10);
-      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+      const t = document.createElement('div'); t.className='toast'; t.textContent=msg; document.body.appendChild(t);
+      setTimeout(()=>t.classList.add('show'),10);
+      setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},4000);
     }
-
-    const FLOWERS = ['🌸','🌷','🌺','🌻','💐','🌹','🌼','✨','🪷','💮'];
-    let flowerInterval = null;
+    const FLOWERS=['🌸','🌷','🌺','🌻','💐','🌹','🌼','✨','🪷','💮'];
+    let flowerInterval=null;
     function showCelebration(name) {
-      document.getElementById('thankName').textContent = name || 'friend';
+      document.getElementById('thankName').textContent=name||'friend';
       document.getElementById('celebrateOverlay').classList.add('show');
-      let count = 0;
-      flowerInterval = setInterval(() => { spawnFlower(); count++; if (count > 60) { clearInterval(flowerInterval); flowerInterval = null; } }, 120);
-      for (let i = 0; i < 12; i++) setTimeout(spawnFlower, i * 60);
+      let count=0;
+      flowerInterval=setInterval(()=>{spawnFlower();count++;if(count>60){clearInterval(flowerInterval);flowerInterval=null;}},120);
+      for(let i=0;i<12;i++) setTimeout(spawnFlower,i*60);
     }
     function spawnFlower() {
-      const el = document.createElement('div');
-      el.className = 'flower-piece';
-      el.textContent = FLOWERS[Math.floor(Math.random() * FLOWERS.length)];
-      el.style.left = (Math.random() * 100) + 'vw';
-      el.style.fontSize = (1.2 + Math.random() * 1.6) + 'rem';
-      const dur = 2.5 + Math.random() * 2.5;
-      el.style.animationDuration = dur + 's';
-      el.style.animationDelay = (Math.random() * 0.8) + 's';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), (dur + 1) * 1000);
+      const el=document.createElement('div'); el.className='flower-piece';
+      el.textContent=FLOWERS[Math.floor(Math.random()*FLOWERS.length)];
+      el.style.left=(Math.random()*100)+'vw'; el.style.fontSize=(1.2+Math.random()*1.6)+'rem';
+      const dur=2.5+Math.random()*2.5; el.style.animationDuration=dur+'s';
+      el.style.animationDelay=(Math.random()*.8)+'s'; document.body.appendChild(el);
+      setTimeout(()=>el.remove(),(dur+1)*1000);
     }
     function closeCelebration() {
       document.getElementById('celebrateOverlay').classList.remove('show');
-      if (flowerInterval) { clearInterval(flowerInterval); flowerInterval = null; }
-      document.querySelectorAll('.flower-piece').forEach(f => f.remove());
+      if(flowerInterval){clearInterval(flowerInterval);flowerInterval=null;}
+      document.querySelectorAll('.flower-piece').forEach(f=>f.remove());
     }
-
-    document.getElementById('hamburger').addEventListener('click', () =>
-      document.getElementById('mobileMenu').classList.toggle('open'));
-
-    /* ── INIT ── */
+    document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.toggle('open'));
     loadProducts();
   </script>
 </body>
