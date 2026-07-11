@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="Supabase.js"></script>
+  <script src="supabase.js"></script>
   <style>
     .gallery-main{max-width:1100px;margin:0 auto;padding:3rem 1.5rem 6rem}
     .gallery-hero{text-align:center;margin-bottom:2.5rem}
@@ -49,12 +49,12 @@
 
   <header class="navbar">
     <div class="nav-inner">
-      <a href="index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
+      <a href="Index.html" class="nav-logo"><span class="yarn-icon">🧶</span> Hook Et</a>
       <nav class="nav-links">
         <a href="Shop.html">Shop</a>
         <a href="Custom.html">Custom Order</a>
         <a href="Gallery.html" style="color:var(--amber)">Gallery</a>
-        <a href="index.html#about">About</a>
+        <a href="Index.html#about">About</a>
       </nav>
       <button class="hamburger" id="hamburger">☰</button>
     </div>
@@ -62,7 +62,7 @@
       <a href="Shop.html">Shop</a>
       <a href="Custom.html">Custom Order</a>
       <a href="Gallery.html">Gallery</a>
-      <a href="index.html#about">About</a>
+      <a href="Index.html#about">About</a>
     </div>
   </header>
 
@@ -78,7 +78,6 @@
     <div id="galleryGrid"><div class="gallery-loading">Loading gallery... 📸</div></div>
   </main>
 
-  <!-- LIGHTBOX -->
   <div class="g-lightbox" id="gLightbox">
     <button class="g-lb-close" onclick="closeLightbox()">✕</button>
     <button class="g-lb-btn g-lb-prev" onclick="shiftLightbox(-1)">‹</button>
@@ -98,15 +97,17 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand"><span class="yarn-icon">🧶</span><span class="footer-name">Hook Et</span><p>Handmade crochet from Cebu 🇵🇭</p></div>
-      <div class="footer-links"><a href="index.html">Home</a><a href="Shop.html">Shop</a><a href="Custom.html">Custom Order</a></div>
+      <div class="footer-links">
+        <a href="Index.html">Home</a>
+        <a href="Shop.html">Shop</a>
+        <a href="Custom.html">Custom Order</a>
+      </div>
     </div>
     <div class="footer-bottom"><p>© 2024 Hook Et. Made with 🧡 and lots of yarn.</p></div>
   </footer>
 
   <script>
-    let allPhotos    = [];
-    let filtered     = [];
-    let currentIndex = 0;
+    let allPhotos = [], filtered = [], currentIndex = 0;
 
     async function loadGallery() {
       try {
@@ -123,22 +124,23 @@
       filtered = photos;
       const grid = document.getElementById('galleryGrid');
       if (!photos.length) {
+        grid.className = '';
         grid.innerHTML = '<div class="gallery-empty"><div>📷</div><p>No photos yet — check back soon!</p></div>';
         return;
       }
       grid.className = 'gallery-grid';
-      grid.innerHTML = photos.map((p, i) => `
+      grid.innerHTML = photos.map((p,i) => `
         <div class="gallery-card" onclick="openLightbox(${i})">
           <img src="${p.image}" alt="${p.label||'Crochet work'}" loading="lazy" />
           <div class="g-label">
             ${p.label||'Hook Et'}
-            ${p.tag ? `<div><span class="g-tag">${p.tag}</span></div>` : ''}
+            ${p.tag?`<div><span class="g-tag">${p.tag}</span></div>`:''}
           </div>
         </div>`).join('');
     }
 
     function buildFilters(photos) {
-      const tags = [...new Set(photos.map(p => p.tag).filter(Boolean))];
+      const tags = [...new Set(photos.map(p=>p.tag).filter(Boolean))];
       const bar  = document.getElementById('filterBar');
       bar.innerHTML = `<button class="filter-pill active" data-tag="all" onclick="filterGallery('all',this)">All</button>`;
       tags.forEach(tag => {
@@ -147,14 +149,13 @@
     }
 
     function filterGallery(tag, btn) {
-      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
       btn.classList.add('active');
-      renderGallery(tag === 'all' ? allPhotos : allPhotos.filter(p => p.tag === tag));
+      renderGallery(tag==='all' ? allPhotos : allPhotos.filter(p=>p.tag===tag));
     }
 
     function openLightbox(idx) {
-      currentIndex = idx;
-      showLightboxPhoto();
+      currentIndex = idx; showLightboxPhoto();
       document.getElementById('gLightbox').classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -164,13 +165,13 @@
     }
     function showLightboxPhoto() {
       const p = filtered[currentIndex];
-      document.getElementById('lbImg').src     = p.image;
-      document.getElementById('lbLabel').textContent = p.label || 'Hook Et';
-      document.getElementById('lbTag').textContent   = p.tag ? '#' + p.tag : '';
-      document.getElementById('lbCounter').textContent = (currentIndex+1) + ' / ' + filtered.length;
+      document.getElementById('lbImg').src = p.image;
+      document.getElementById('lbLabel').textContent = p.label||'Hook Et';
+      document.getElementById('lbTag').textContent   = p.tag?'#'+p.tag:'';
+      document.getElementById('lbCounter').textContent = (currentIndex+1)+' / '+filtered.length;
     }
     function shiftLightbox(dir) {
-      currentIndex = (currentIndex + dir + filtered.length) % filtered.length;
+      currentIndex = (currentIndex+dir+filtered.length)%filtered.length;
       showLightboxPhoto();
     }
     document.addEventListener('keydown', e => {
@@ -183,7 +184,7 @@
       if (e.target===document.getElementById('gLightbox')) closeLightbox();
     });
 
-    document.getElementById('hamburger').addEventListener('click', () =>
+    document.getElementById('hamburger').addEventListener('click',()=>
       document.getElementById('mobileMenu').classList.toggle('open'));
 
     loadGallery();
